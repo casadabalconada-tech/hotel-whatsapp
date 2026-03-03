@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContactStatus {
+  ACTUAL
+  FUTURO
+  HISTORICO
+}
+
+enum Language {
+  ES
+  EN
+  DE
+  FR
+  IT
+  PT
+}
+
+model Contact {
+  id         String        @id @default(uuid())
+  name       String
+  roomNumber String?
+  phone      String
+  language   Language
+  checkinUrl String?
+  status     ContactStatus
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+model MessageCategory {
+  id       String    @id @default(uuid())
+  name     String
+  messages Message[]
+}
+
+model Message {
+  id         String          @id @default(uuid())
+  baseKey    String
+  categoryId String
+  category   MessageCategory @relation(fields: [categoryId], references: [id])
+  language   Language
+  content    String
+  order      Int             @default(0)
+  createdAt  DateTime        @default(now())
+
+  @@index([baseKey])
+  @@index([categoryId, order])
+}
+
+// =======================
+// FIRMA GLOBAL
+// =======================
+model Signature {
+  id        String   @id @default(uuid())
+  content   String
+  updatedAt DateTime @updatedAt
+}
