@@ -17,7 +17,7 @@ export const metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: light)", color: "#faf7f2" },
   ],
 };
 
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className="bg-gray-100 min-h-screen"
+        className="min-h-screen"
         suppressHydrationWarning
       >
         <HeaderProvider>

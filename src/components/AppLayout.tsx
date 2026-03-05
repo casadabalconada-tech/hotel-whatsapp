@@ -20,10 +20,11 @@ export default function AppLayout({
     <div className="min-h-screen w-full bg-gray-100 flex flex-col">
       {/* HEADER */}
       <header className="sticky top-0 z-30 bg-white border-b safe-top">
-        <div className="mx-auto max-w-screen-md px-4 pt-3 pb-3 space-y-2">
+        <div className="mx-auto max-w-screen-md px-4 pt-4 pb-3 space-y-3">
+          
           {/* BRANDING */}
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-green-500 flex items-center justify-center text-white text-sm">
+            <div className="w-8 h-8 rounded-xl bg-green-600 flex items-center justify-center text-white text-sm shadow-sm">
               💬
             </div>
 
@@ -39,14 +40,14 @@ export default function AppLayout({
                 <a
                   href={backHref}
                   aria-label="Volver"
-                  className="mt-0.5 text-blue-600 text-lg active:scale-90 transition"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl text-gray-700 hover:bg-gray-100 active:scale-95 transition"
                 >
                   ←
                 </a>
               )}
 
               {(title || subtitle) && (
-                <div className="leading-tight">
+                <div className="leading-tight pt-0.5">
                   {title && title !== appTitle && (
                     <h1 className="text-lg font-semibold text-gray-900">
                       {title}

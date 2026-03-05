@@ -31,9 +31,9 @@ export default function BottomNav() {
     <nav
       role="navigation"
       aria-label="Navegación principal"
-      className="fixed z-50 bg-white border-t bottom-0 left-0 right-0 md:top-0 md:left-0 md:right-auto md:h-screen md:w-20 md:border-t-0 md:border-r"
+      className="fixed z-50 bg-[var(--background)] border-t bottom-0 left-0 right-0 md:top-0 md:left-0 md:right-auto md:h-screen md:w-20 md:border-t-0 md:border-r"
     >
-      <div className="flex justify-around h-full md:flex-col md:justify-start md:gap-4 md:pt-6">
+      <div className="flex justify-around h-full md:flex-col md:items-center md:gap-3 md:pt-6">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = isActive(href);
 
@@ -43,10 +43,10 @@ export default function BottomNav() {
               href={href}
               aria-current={active ? "page" : undefined}
               className={[
-                "flex flex-col items-center gap-1 py-2 px-3 text-xs transition-transform active:scale-90",
+                "flex flex-col items-center justify-center gap-1 w-full md:w-12 py-2 px-3 md:py-3 text-xs transition active:scale-95",
                 active
-                  ? "text-blue-600 font-semibold"
-                  : "text-gray-500",
+                  ? "text-[var(--primary)] font-semibold bg-[var(--primary-soft)] md:rounded-lg"
+                  : "text-gray-500 hover:text-[var(--primary)]",
               ].join(" ")}
             >
               <Icon size={20} />

@@ -86,22 +86,22 @@ export default function SendPage() {
   useEffect(() => {
     fetch("/api/contacts")
       .then(r => r.json())
-      .then(data => {
-        const parsed = ContactsSchema.safeParse(data);
+      .then(d => {
+        const parsed = ContactsSchema.safeParse(d);
         setContacts(parsed.success ? parsed.data : []);
       });
 
     fetch("/api/categories")
       .then(r => r.json())
-      .then(data => {
-        const parsed = CategoriesOutputSchema.safeParse(data);
+      .then(d => {
+        const parsed = CategoriesOutputSchema.safeParse(d);
         setCategories(parsed.success ? parsed.data : []);
       });
 
     fetch("/api/messages")
       .then(r => r.json())
-      .then(data => {
-        const parsed = MessagesOutputSchema.safeParse(data);
+      .then(d => {
+        const parsed = MessagesOutputSchema.safeParse(d);
         setMessages(parsed.success ? parsed.data : []);
       });
 
@@ -229,9 +229,7 @@ export default function SendPage() {
     if (!c || !finalText) return;
 
     window.open(
-      `https://wa.me/${c.phone.replace(/\D/g, "")}?text=${encodeURIComponent(
-        finalText
-      )}`,
+      `https://wa.me/${c.phone.replace(/\D/g, "")}?text=${encodeURIComponent(finalText)}`,
       "_blank"
     );
   };
@@ -240,16 +238,13 @@ export default function SendPage() {
      UI
   ======================= */
 
-  const activeContacts = contacts.filter(
-    c => c.status === "ACTUAL"
-  );
+  const activeContacts = contacts.filter(c => c.status === "ACTUAL");
 
   return (
-    <div className="space-y-6 max-w-xl mx-auto pb-40">
-
+    <div className="space-y-8 max-w-xl mx-auto pb-40">
       {/* CONTACTO */}
-      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
-        <label className="text-sm font-medium">Contacto</label>
+      <section className="bg-white rounded-2xl shadow-sm p-5 space-y-2">
+        <label className="text-sm font-medium text-gray-700">Contacto</label>
         <select
           className="w-full rounded-xl border px-3 py-3 text-base"
           value={selectedContact}
@@ -265,40 +260,30 @@ export default function SendPage() {
       </section>
 
       {/* OPCIONES */}
-      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-3">
-        <p className="text-sm font-medium">Opciones automáticas</p>
+      <section className="bg-white rounded-2xl shadow-sm p-5 space-y-3">
+        <p className="text-sm font-medium text-gray-700">
+          Opciones automáticas
+        </p>
 
-        <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendGreeting}
-            onChange={e => setSendGreeting(e.target.checked)}
-          />
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" checked={sendGreeting} onChange={e => setSendGreeting(e.target.checked)} />
           Saludo personalizado
         </label>
 
-        <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendRoom}
-            onChange={e => setSendRoom(e.target.checked)}
-          />
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" checked={sendRoom} onChange={e => setSendRoom(e.target.checked)} />
           Número de habitación
         </label>
 
-        <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendCheckin}
-            onChange={e => setSendCheckin(e.target.checked)}
-          />
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" checked={sendCheckin} onChange={e => setSendCheckin(e.target.checked)} />
           Check-in online
         </label>
       </section>
 
       {/* MENSAJES */}
-      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-3">
-        <label className="text-sm font-medium">Mensajes</label>
+      <section className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
+        <label className="text-sm font-medium text-gray-700">Mensajes</label>
 
         <select
           className="w-full rounded-xl border px-3 py-3 text-base"
@@ -317,16 +302,14 @@ export default function SendPage() {
         </select>
 
         {spanishMessages.map(m => (
-          <label key={m.id} className="flex gap-3 text-sm">
+          <label key={m.id} className="flex gap-3 text-sm leading-snug">
             <input
               type="checkbox"
               checked={selectedBaseKeys.includes(m.baseKey)}
               onChange={e =>
                 e.target.checked
-                  ? setSelectedBaseKeys(prev => [...prev, m.baseKey])
-                  : setSelectedBaseKeys(prev =>
-                      prev.filter(k => k !== m.baseKey)
-                    )
+                  ? setSelectedBaseKeys(p => [...p, m.baseKey])
+                  : setSelectedBaseKeys(p => p.filter(k => k !== m.baseKey))
               }
             />
             <span>{m.content}</span>
@@ -335,13 +318,9 @@ export default function SendPage() {
       </section>
 
       {/* FIRMA */}
-      <section className="bg-white rounded-2xl shadow-sm p-4">
-        <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={addSignature}
-            onChange={e => setAddSignature(e.target.checked)}
-          />
+      <section className="bg-white rounded-2xl shadow-sm p-5">
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" checked={addSignature} onChange={e => setAddSignature(e.target.checked)} />
           Añadir firma
         </label>
       </section>
@@ -358,17 +337,14 @@ export default function SendPage() {
         </section>
       )}
 
-      {/* BOTÓN SCROLLABLE */}
-      <section className="pt-6">
-        <button
-          onClick={openWhatsApp}
-          disabled={!finalText}
-          className="w-full py-4 rounded-2xl bg-[#25D366] text-white text-lg font-semibold disabled:bg-gray-400 active:scale-95 transition"
-        >
-          📱 Enviar por WhatsApp
-        </button>
-      </section>
-
+      {/* BOTÓN */}
+      <button
+        onClick={openWhatsApp}
+        disabled={!finalText}
+        className="w-full py-4 rounded-2xl bg-[#25D366] text-white text-lg font-semibold disabled:bg-gray-400 active:scale-95 transition"
+      >
+        📱 Enviar por WhatsApp
+      </button>
     </div>
   );
 }

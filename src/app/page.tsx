@@ -11,12 +11,14 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* HERO */}
-      <section className="bg-white rounded-2xl shadow-sm p-5">
-        <h2 className="text-base font-semibold mb-1">👋 Bienvenido</h2>
+      <section className="bg-white rounded-2xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-1">
+          👋 Bienvenido
+        </h2>
         <p className="text-sm text-gray-600">
-          Accesos rápidos para el trabajo diario
+          Accesos rápidos para el trabajo diario del hotel
         </p>
       </section>
 
@@ -27,7 +29,7 @@ export default function HomePage() {
           emoji="💬"
           title="Enviar mensaje"
           subtitle="WhatsApp manual"
-          color="bg-green-500"
+          color="bg-green-600"
         />
 
         <PrimaryAction
@@ -47,6 +49,13 @@ export default function HomePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <DashboardCard
+            href="/taxi"
+            emoji="🚕"
+            title="Solicitud de taxi"
+            subtitle="Traslados de clientes"
+          />
+
+          <DashboardCard
             href="/contacts"
             emoji="👥"
             title="Contactos"
@@ -59,6 +68,13 @@ export default function HomePage() {
             title="Plantillas"
             subtitle="Mensajes guardados"
           />
+
+          <DashboardCard
+            href="/budget"
+            emoji="💶"
+            title="Generar presupuesto"
+            subtitle="Enviar por WhatsApp"
+          />
         </div>
       </section>
 
@@ -70,10 +86,27 @@ export default function HomePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <DashboardCard
+            href="/admin/taxi-companies"
+            emoji="🚖"
+            title="Empresas de taxi"
+            subtitle="Gestión de compañías"
+            admin
+          />
+
+          <DashboardCard
+            href="/admin/room-types"
+            emoji="🛏️"
+            title="Tipos de habitación"
+            subtitle="Clasificación"
+            admin
+          />
+
+          <DashboardCard
             href="/admin/signature"
             emoji="✍️"
             title="Firma automática"
             subtitle="Texto por defecto"
+            admin
           />
         </div>
       </section>
@@ -81,7 +114,9 @@ export default function HomePage() {
   );
 }
 
-/* COMPONENTES LOCALES */
+/* =======================
+   COMPONENTES LOCALES
+======================= */
 
 function PrimaryAction({
   href,
@@ -99,13 +134,21 @@ function PrimaryAction({
   return (
     <Link
       href={href}
-      className={`${color} text-white rounded-2xl p-5 shadow-sm active:scale-95 transition-transform`}
+      className={[
+        color,
+        "text-white rounded-2xl p-5 shadow-sm",
+        "active:scale-95 transition-transform",
+      ].join(" ")}
     >
       <div className="flex items-center gap-4">
-        <div className="text-3xl">{emoji}</div>
+        <div className="text-3xl leading-none">{emoji}</div>
         <div>
-          <h3 className="font-semibold text-base">{title}</h3>
-          <p className="text-sm opacity-90">{subtitle}</p>
+          <h3 className="font-semibold text-base leading-tight">
+            {title}
+          </h3>
+          <p className="text-sm opacity-90">
+            {subtitle}
+          </p>
         </div>
       </div>
     </Link>
@@ -117,24 +160,40 @@ function DashboardCard({
   emoji,
   title,
   subtitle,
+  admin = false,
 }: {
   href: string;
   emoji: string;
   title: string;
   subtitle: string;
+  admin?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className="bg-white rounded-2xl shadow-sm p-4 h-full flex flex-col justify-between hover:shadow-md active:scale-95 transition"
+      className={[
+        "rounded-2xl p-4 h-full flex flex-col justify-between transition",
+        "active:scale-95",
+        admin
+          ? "bg-blue-50 border border-blue-200 shadow-sm"
+          : "bg-white shadow-sm",
+      ].join(" ")}
     >
-      <div className="text-2xl">{emoji}</div>
+      <div className="flex items-start justify-between">
+        <div className="text-2xl leading-none">{emoji}</div>
+
+        {admin && (
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-600 text-white">
+            ADMIN
+          </span>
+        )}
+      </div>
 
       <div className="mt-4">
-        <p className="font-semibold text-sm leading-tight">
+        <p className="font-semibold text-sm leading-tight text-gray-900">
           {title}
         </p>
-        <p className="text-xs text-gray-500 mt-0.5">
+        <p className="text-xs text-gray-600 mt-0.5">
           {subtitle}
         </p>
       </div>

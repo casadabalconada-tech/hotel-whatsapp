@@ -9,7 +9,10 @@ export default function AdminSignaturePage() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<null | {
+    text: string;
+    type: "ok" | "error";
+  }>(null);
 
   /* =======================
      HEADER (ESTABLE)
@@ -21,49 +24,63 @@ export default function AdminSignaturePage() {
       backHref: "/",
     });
 
-    return () => {
-      setHeader({});
-    };
+    return () => setHeader({});
   }, [setHeader]);
 
   /* =======================
      CARGAR FIRMA
   ======================= */
   useEffect(() => {
-    fetch("/api/signature")
-      .then((res) => res.json())
-      .then((data) => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/signature");
+        const data = await res.json();
         setContent(data?.content ?? "");
+      } catch {
+        // silencioso, no bloquea la UI
+      } finally {
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      }
+    };
+
+    load();
   }, []);
 
   /* =======================
      GUARDAR FIRMA
   ======================= */
   const saveSignature = async () => {
+    if (saving) return;
+
     setSaving(true);
-    setMessage("");
+    setMessage(null);
 
-    const res = await fetch("/api/signature", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
-    });
+    try {
+      const res = await fetch("/api/signature", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
 
-    setMessage(
-      res.ok
-        ? "✅ Firma guardada correctamente"
-        : "❌ Error al guardar la firma"
-    );
-
-    setSaving(false);
+      setMessage({
+        type: res.ok ? "ok" : "error",
+        text: res.ok
+          ? "Firma guardada correctamente"
+          : "Error al guardar la firma",
+      });
+    } catch {
+      setMessage({
+        type: "error",
+        text: "Error de conexión",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-500">
+      <div className="flex items-center justify-center py-20 text-sm text-gray-500">
         Cargando firma…
       </div>
     );
@@ -72,9 +89,10 @@ export default function AdminSignaturePage() {
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
 
-      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-3">
+      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-4">
         <p className="text-sm text-gray-600">
-          Esta firma se añadirá automáticamente cuando la opción esté activada.
+          Esta firma se añadirá automáticamente a los mensajes cuando la opción
+          esté activada.
         </p>
 
         <textarea
@@ -85,14 +103,13 @@ export default function AdminSignaturePage() {
         />
 
         {/* PREVIEW */}
-        {content && (
+        {content.trim() && (
           <div className="bg-gray-100 rounded-xl p-3">
             <p className="text-xs text-gray-500 mb-1">
               Vista previa (WhatsApp)
             </p>
             <div className="bg-white rounded-xl p-3 shadow text-sm whitespace-pre-wrap">
-              —
-              <br />
+              —{"\n"}
               {content}
             </div>
           </div>
@@ -111,12 +128,18 @@ export default function AdminSignaturePage() {
         </button>
 
         {message && (
-          <div className="text-sm text-center">
-            {message}
+          <div
+            className={`text-sm text-center ${
+              message.type === "ok"
+                ? "text-green-600"
+                : "text-red-600"
+            }`}
+          >
+            {message.type === "ok" ? "✅ " : "❌ "}
+            {message.text}
           </div>
         )}
       </section>
-
     </div>
   );
 }

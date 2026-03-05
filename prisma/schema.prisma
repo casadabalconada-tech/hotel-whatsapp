@@ -32,6 +32,8 @@ model Contact {
   status     ContactStatus
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
+
+  taxiRequests TaxiRequest[]
 }
 
 model MessageCategory {
@@ -61,4 +63,44 @@ model Signature {
   id        String   @id @default(uuid())
   content   String
   updatedAt DateTime @updatedAt
+}
+
+model TaxiCompany {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+
+  createdAt DateTime @default(now())
+
+  taxiRequests TaxiRequest[]
+}
+
+model TaxiRequest {
+  id            String   @id @default(uuid())
+
+  taxiCompanyId String
+  contactId     String
+
+  date          DateTime
+  origin        String
+  destination   String
+  passengers    Int
+
+  message       String
+
+  createdAt     DateTime @default(now())
+
+  taxiCompany TaxiCompany @relation(fields: [taxiCompanyId], references: [id])
+  contact     Contact     @relation(fields: [contactId], references: [id])
+}
+
+// =======================
+// ROOM TYPES
+// =======================
+model RoomType {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  icon        String?
+  createdAt   DateTime @default(now())
 }

@@ -1,0 +1,192 @@
+ El volumen de la unidad C no tiene etiqueta.
+ El n£mero de serie del volumen es: 4CD4-0CBE
+
+ Directorio de C:\dev\hotel-whatsapp\src
+
+04/03/2026  00:18    <DIR>          .
+03/03/2026  23:25    <DIR>          ..
+04/03/2026  09:51                 0 a.txt
+04/03/2026  09:15    <DIR>          app
+01/03/2026  19:30    <DIR>          components
+02/03/2026  19:13    <DIR>          lib
+               1 archivos              0 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app
+
+04/03/2026  09:15    <DIR>          .
+04/03/2026  00:18    <DIR>          ..
+04/03/2026  00:33    <DIR>          admin
+04/03/2026  09:09    <DIR>          api
+01/03/2026  15:01    <DIR>          contacts
+26/02/2026  01:15            25.931 favicon.ico
+04/03/2026  08:56               997 globals.css
+02/03/2026  09:44               986 layout.tsx
+01/03/2026  15:01    <DIR>          messages
+02/03/2026  09:56             3.320 page.tsx
+01/03/2026  15:01    <DIR>          send
+04/03/2026  09:15    <DIR>          taxi
+01/03/2026  15:01    <DIR>          translate
+               4 archivos         31.234 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\admin
+
+04/03/2026  00:33    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+01/03/2026  15:01    <DIR>          signature
+04/03/2026  00:33    <DIR>          taxi-companies
+               0 archivos              0 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\admin\signature
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  00:33    <DIR>          ..
+02/03/2026  10:12             3.257 page.tsx
+               1 archivos          3.257 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\admin\taxi-companies
+
+04/03/2026  00:33    <DIR>          .
+04/03/2026  00:33    <DIR>          ..
+04/03/2026  00:34             2.534 page.tsx
+               1 archivos          2.534 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api
+
+04/03/2026  09:09    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+01/03/2026  15:01    <DIR>          categories
+01/03/2026  15:01    <DIR>          contacts
+01/03/2026  15:01    <DIR>          messages
+01/03/2026  15:01    <DIR>          signature
+04/03/2026  00:26    <DIR>          taxi-companies
+04/03/2026  09:09    <DIR>          taxi-requests
+01/03/2026  15:01    <DIR>          translate
+               0 archivos              0 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\categories
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+02/03/2026  18:59             2.685 route.ts
+               1 archivos          2.685 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\contacts
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+03/03/2026  10:07             3.448 route.ts
+               1 archivos          3.448 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\messages
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+02/03/2026  18:44             5.448 route.ts
+               1 archivos          5.448 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\signature
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+02/03/2026  19:04             1.432 route.ts
+               1 archivos          1.432 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\taxi-companies
+
+04/03/2026  00:26    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+04/03/2026  00:30               894 route.ts
+               1 archivos            894 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\taxi-requests
+
+04/03/2026  09:09    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+04/03/2026  09:10             1.582 route.ts
+               1 archivos          1.582 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\api\translate
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:09    <DIR>          ..
+02/03/2026  19:01             1.691 route.ts
+               1 archivos          1.691 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\contacts
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+03/03/2026  09:34             8.598 page.tsx
+               1 archivos          8.598 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\messages
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+03/03/2026  01:13            11.588 page.tsx
+               1 archivos         11.588 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\send
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+03/03/2026  00:35            10.337 page.tsx
+               1 archivos         10.337 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\taxi
+
+04/03/2026  09:15    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+04/03/2026  09:46             5.630 page.tsx
+               1 archivos          5.630 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\app\translate
+
+01/03/2026  15:01    <DIR>          .
+04/03/2026  09:15    <DIR>          ..
+03/03/2026  00:41             8.061 page.tsx
+               1 archivos          8.061 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\components
+
+01/03/2026  19:30    <DIR>          .
+04/03/2026  00:18    <DIR>          ..
+02/03/2026  10:17             2.275 AppLayout.tsx
+02/03/2026  10:24             1.823 BottomNav.tsx
+02/03/2026  10:14             1.515 HeaderContext.tsx
+               3 archivos          5.613 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\lib
+
+02/03/2026  19:13    <DIR>          .
+04/03/2026  00:18    <DIR>          ..
+01/03/2026  00:15               328 prisma.ts
+04/03/2026  00:24    <DIR>          schemas
+               1 archivos            328 bytes
+
+ Directorio de C:\dev\hotel-whatsapp\src\lib\schemas
+
+04/03/2026  00:24    <DIR>          .
+02/03/2026  19:13    <DIR>          ..
+02/03/2026  19:44               312 category.input.ts
+02/03/2026  20:18               255 category.output.ts
+02/03/2026  19:18               231 category.ts
+03/03/2026  10:07               855 contact.input.ts
+02/03/2026  20:09               468 contact.output.ts
+02/03/2026  19:17               612 contact.ts
+02/03/2026  19:42               341 enums.ts
+04/03/2026  00:26               427 index.ts
+02/03/2026  19:17               183 language.ts
+02/03/2026  19:44               383 message.input.ts
+02/03/2026  20:18               562 message.output.ts
+02/03/2026  19:18               422 message.ts
+02/03/2026  19:46               103 signature.input.ts
+04/03/2026  00:23               283 taxi-company.input.ts
+04/03/2026  00:24               145 taxi-company.output.ts
+04/03/2026  00:22               233 taxi-company.ts
+02/03/2026  19:45               185 translate.input.ts
+              17 archivos          6.000 bytes
+
+     Total de archivos en la lista:
+              40 archivos        110.360 bytes
+              62 dirs  67.335.974.912 bytes libres

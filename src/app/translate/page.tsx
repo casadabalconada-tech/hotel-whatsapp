@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
 
+/* =======================
+   TYPES
+======================= */
+
 type Language = "ES" | "EN" | "DE" | "FR" | "IT" | "PT";
 
 type Contact = {
@@ -41,6 +45,10 @@ const renderWhatsAppPreview = (text: string) =>
     </div>
   ));
 
+/* =======================
+   PAGE
+======================= */
+
 export default function TranslatePage() {
   const { setHeader } = useHeader();
 
@@ -73,7 +81,7 @@ export default function TranslatePage() {
   }, [setHeader]);
 
   /* =======================
-     CARGA INICIAL
+     LOAD
   ======================= */
 
   useEffect(() => {
@@ -86,19 +94,34 @@ export default function TranslatePage() {
       .then(d => d?.content && setSignature(d.content));
   }, []);
 
-  // 🔒 Si cambia el contacto, invalida el mensaje
-  useEffect(() => {
-    setTranslatedText("");
-  }, [selectedContactId]);
+  /* =======================
+     STATE DERIVED
+  ======================= */
 
-  // ✅ SOLO CONTACTOS ACTUALES
-  const activeContacts = contacts.filter(
-    c => c.status === "ACTUAL"
-  );
+  const activeContacts = contacts.filter(c => c.status === "ACTUAL");
 
   const selectedContact = activeContacts.find(
     c => c.id === selectedContactId
   );
+
+  const canTranslate =
+    !!selectedContact &&
+    (spanishText.trim() ||
+      sendGreeting ||
+      sendRoom ||
+      sendCheckin);
+
+  /* =======================
+     EFFECTS
+  ======================= */
+
+  useEffect(() => {
+    setTranslatedText("");
+  }, [selectedContactId]);
+
+  /* =======================
+     TRANSLATE
+  ======================= */
 
   const translateText = async (text: string, lang: Language) => {
     if (lang === "ES") return text;
@@ -114,7 +137,7 @@ export default function TranslatePage() {
   };
 
   const translate = async () => {
-    if (!selectedContact) return;
+    if (!selectedContact || loading) return;
 
     setLoading(true);
     const blocks: string[] = [];
@@ -141,7 +164,7 @@ export default function TranslatePage() {
       blocks.push(`${txt}\n${selectedContact.checkinUrl}`);
     }
 
-    if (spanishText) {
+    if (spanishText.trim()) {
       blocks.push(
         await translateText(spanishText, selectedContact.language)
       );
@@ -157,6 +180,10 @@ export default function TranslatePage() {
     setLoading(false);
   };
 
+  /* =======================
+     WHATSAPP
+  ======================= */
+
   const openWhatsApp = () => {
     if (!selectedContact || !translatedText) return;
 
@@ -167,8 +194,13 @@ export default function TranslatePage() {
     );
   };
 
+  /* =======================
+     UI
+  ======================= */
+
   return (
-    <div className="space-y-6 max-w-xl mx-auto">
+    <div className="space-y-6 max-w-xl mx-auto pb-32">
+
       {/* CONTACTO */}
       <section className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
         <label className="text-sm font-medium">Contacto</label>
@@ -191,39 +223,23 @@ export default function TranslatePage() {
         <p className="text-sm font-medium">Opciones automáticas</p>
 
         <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendGreeting}
-            onChange={e => setSendGreeting(e.target.checked)}
-          />
+          <input type="checkbox" checked={sendGreeting} onChange={e => setSendGreeting(e.target.checked)} />
           Saludo personalizado
         </label>
 
         <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendRoom}
-            onChange={e => setSendRoom(e.target.checked)}
-          />
+          <input type="checkbox" checked={sendRoom} onChange={e => setSendRoom(e.target.checked)} />
           Número de habitación
         </label>
 
         <label className="flex gap-3 text-sm">
-          <input
-            type="checkbox"
-            checked={sendCheckin}
-            onChange={e => setSendCheckin(e.target.checked)}
-          />
+          <input type="checkbox" checked={sendCheckin} onChange={e => setSendCheckin(e.target.checked)} />
           Check-in online
         </label>
 
         {signature && (
           <label className="flex gap-3 text-sm">
-            <input
-              type="checkbox"
-              checked={includeSignature}
-              onChange={e => setIncludeSignature(e.target.checked)}
-            />
+            <input type="checkbox" checked={includeSignature} onChange={e => setIncludeSignature(e.target.checked)} />
             Añadir firma
           </label>
         )}
@@ -231,25 +247,20 @@ export default function TranslatePage() {
 
       {/* MENSAJE */}
       <section className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
-        <label className="text-sm font-medium">Mensaje principal</label>
+        <label className="text-sm font-medium">Mensaje en español</label>
         <textarea
           className="w-full h-28 rounded-xl border px-3 py-3 text-base"
-          placeholder="Escribe el mensaje en español…"
+          placeholder="Escribe el mensaje…"
           value={spanishText}
           onChange={e => setSpanishText(e.target.value)}
         />
       </section>
 
       <button
+        type="button"
         onClick={translate}
-        disabled={!selectedContact}
-        className="
-          w-full py-4 rounded-2xl
-          bg-blue-600 text-white
-          text-lg font-semibold
-          disabled:bg-gray-400
-          active:scale-95 transition
-        "
+        disabled={!canTranslate || loading}
+        className="w-full py-4 rounded-2xl bg-blue-600 text-white text-lg font-semibold disabled:bg-gray-400 active:scale-95 transition"
       >
         {loading ? "Traduciendo…" : "Traducir"}
       </button>
@@ -267,15 +278,10 @@ export default function TranslatePage() {
       )}
 
       <button
+        type="button"
         onClick={openWhatsApp}
         disabled={!translatedText}
-        className="
-          w-full py-4 rounded-2xl
-          bg-[#25D366] text-white
-          text-lg font-semibold
-          disabled:bg-gray-400
-          active:scale-95 transition
-        "
+        className="w-full py-4 rounded-2xl bg-[#25D366] text-white text-lg font-semibold disabled:bg-gray-400 active:scale-95 transition"
       >
         📱 Enviar por WhatsApp
       </button>

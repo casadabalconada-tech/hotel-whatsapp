@@ -47,6 +47,12 @@ export default function MessagesPage() {
     Record<string, boolean>
   >({});
 
+  const [categoryOpen, setCategoryOpen] = useState(false);
+
+  // 🔥 efecto visual reforzado
+  const [categoryFlash, setCategoryFlash] = useState(false);
+  const [messageFlash, setMessageFlash] = useState(false);
+
   const messageFormRef = useRef<HTMLDivElement>(null);
   const categoryFormRef = useRef<HTMLDivElement>(null);
 
@@ -99,6 +105,7 @@ export default function MessagesPage() {
 
     setCategoryName("");
     setEditingCategoryId(null);
+    setCategoryOpen(false);
     loadCategories();
   };
 
@@ -118,12 +125,13 @@ export default function MessagesPage() {
   const editCategory = (category: Category) => {
     setEditingCategoryId(category.id);
     setCategoryName(category.name);
+    setCategoryOpen(true);
+
+    setCategoryFlash(true);
+    setTimeout(() => setCategoryFlash(false), 1200);
 
     setTimeout(() => {
-      categoryFormRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      categoryFormRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
 
@@ -177,11 +185,11 @@ export default function MessagesPage() {
       [m.categoryId]: true,
     }));
 
+    setMessageFlash(true);
+    setTimeout(() => setMessageFlash(false), 1200);
+
     setTimeout(() => {
-      messageFormRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      messageFormRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
 
@@ -211,55 +219,84 @@ export default function MessagesPage() {
 
   return (
     <div className="space-y-10 max-w-3xl mx-auto">
+
       {/* ================= CATEGORÍAS ================= */}
       <section
         ref={categoryFormRef}
-        className="bg-gray-50 border-2 border-dashed rounded-2xl p-4 space-y-3"
+        className={`rounded-2xl border overflow-hidden transition-all duration-700 ${
+          categoryFlash
+            ? "bg-blue-100 border-blue-500 ring-4 ring-blue-300 animate-pulse"
+            : "bg-gray-50 border-gray-200"
+        }`}
       >
-        <h2 className="text-sm font-semibold flex items-center gap-2">
-          📂 {editingCategoryId ? "Editar categoría" : "Nueva categoría"}
-        </h2>
+        <button
+          onClick={() => setCategoryOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-5 py-3 text-sm font-medium"
+        >
+          <span>
+            {editingCategoryId ? "Editar categoría" : "Gestionar categorías"}
+          </span>
+          <span className="text-gray-400">
+            {categoryOpen ? "▾" : "▸"}
+          </span>
+        </button>
 
-        <input
-          className="w-full rounded-xl border px-3 py-2 text-sm bg-white"
-          placeholder="Nombre de la categoría"
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
-        />
+        {categoryOpen && (
+          <div className="px-5 pb-5 space-y-4 border-t bg-white">
+            <p className="text-xs text-gray-500">
+              Agrupa los mensajes por tipo
+            </p>
 
-        <div className="flex gap-2">
-          <button
-            onClick={saveCategory}
-            className="flex-1 py-2 bg-gray-700 text-white rounded-xl text-sm font-medium active:scale-95 transition"
-          >
-            Guardar categoría
-          </button>
+            <input
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
+              placeholder="Nombre de la categoría"
+              value={categoryName}
+              onChange={(e) => setCategoryName(e.target.value)}
+            />
 
-          {editingCategoryId && (
-            <button
-              onClick={() => {
-                setEditingCategoryId(null);
-                setCategoryName("");
-              }}
-              className="flex-1 py-2 bg-gray-200 rounded-xl text-sm"
-            >
-              Cancelar
-            </button>
-          )}
-        </div>
+            <div className="flex gap-2">
+              <button
+                onClick={saveCategory}
+                className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition active:scale-95"
+              >
+                Guardar
+              </button>
+
+              <button
+                onClick={() => {
+                  setEditingCategoryId(null);
+                  setCategoryName("");
+                  setCategoryOpen(false);
+                }}
+                className="flex-1 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ================= MENSAJE ================= */}
       <section
         ref={messageFormRef}
-        className="bg-white rounded-2xl shadow-sm p-4 space-y-3 border"
+        className={`rounded-2xl shadow-sm p-5 space-y-4 transition-all duration-700 ${
+          messageFlash
+            ? "bg-blue-100 ring-4 ring-blue-300 animate-pulse"
+            : "bg-white"
+        }`}
       >
-        <h2 className="text-sm font-semibold flex items-center gap-2">
-          💬 {editingMessageId ? "Editar mensaje" : "Nuevo mensaje (ES)"}
-        </h2>
+        <div>
+          <h2 className="text-base font-semibold">
+            {editingMessageId ? "Editar mensaje" : "Nuevo mensaje (ES)"}
+          </h2>
+          <p className="text-xs text-gray-500">
+            Plantilla reutilizable de WhatsApp
+          </p>
+        </div>
 
         <select
-          className="w-full rounded-xl border px-3 py-2 text-sm"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
@@ -272,7 +309,7 @@ export default function MessagesPage() {
         </select>
 
         <textarea
-          className="w-full min-h-[140px] rounded-xl border px-3 py-2 text-sm"
+          className="w-full min-h-[140px] rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
           placeholder="Escribe el mensaje (usa *negrita* como WhatsApp)"
           value={messageContent}
           onChange={(e) => setMessageContent(e.target.value)}
@@ -281,7 +318,7 @@ export default function MessagesPage() {
         {messageContent && (
           <div className="bg-[#ece5dd] rounded-2xl p-4">
             <p className="text-xs text-gray-500 mb-2">
-              Vista previa (WhatsApp)
+              Vista previa
             </p>
             <div className="ml-auto max-w-[85%] bg-[#dcf8c6] p-3 rounded-2xl rounded-br-sm shadow text-sm">
               {renderWhatsAppPreview(messageContent)}
@@ -291,7 +328,7 @@ export default function MessagesPage() {
 
         <button
           onClick={saveMessage}
-          className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold active:scale-95 transition"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition active:scale-95"
         >
           Guardar mensaje
         </button>
@@ -318,20 +355,26 @@ export default function MessagesPage() {
                   }
                   className="font-semibold text-sm flex items-center gap-2"
                 >
-                  {expanded ? "🔽" : "▶️"} {category.name} ({messages.length})
+                  {expanded ? "▾" : "▸"} {category.name}
+                  <span className="text-gray-400 text-xs">
+                    ({messages.length})
+                  </span>
                 </button>
 
                 <div className="flex gap-3 text-sm">
-                  <button onClick={() => editCategory(category)}>
-                    ✏️ Editar
+                  <button
+                    onClick={() => editCategory(category)}
+                    className="text-gray-600"
+                  >
+                    Editar
                   </button>
 
                   <button
                     onClick={() => deleteCategory(category.id)}
                     disabled={!isEmpty}
-                    className="text-red-600 disabled:opacity-30"
+                    className="text-red-500 disabled:opacity-30"
                   >
-                    🗑 Eliminar
+                    Eliminar
                   </button>
                 </div>
               </div>
@@ -340,13 +383,13 @@ export default function MessagesPage() {
                 messages.map((m, index) => (
                   <div
                     key={m.id}
-                    className="bg-gray-50 rounded-xl p-3 space-y-3"
+                    className="bg-gray-50 rounded-xl p-3 space-y-3 hover:bg-gray-100 transition"
                   >
                     <div className="text-sm whitespace-pre-wrap">
                       {m.content}
                     </div>
 
-                    <div className="flex flex-wrap gap-3 text-sm">
+                    <div className="flex flex-wrap gap-3 text-xs text-gray-600">
                       <button
                         onClick={() =>
                           moveMessage(m.baseKey, "UP", category.id)
@@ -368,14 +411,14 @@ export default function MessagesPage() {
                       </button>
 
                       <button onClick={() => editMessage(m)}>
-                        ✏️ Editar
+                        Editar
                       </button>
 
                       <button
                         onClick={() => deleteMessage(m.id)}
-                        className="text-red-600"
+                        className="text-red-500"
                       >
-                        🗑 Eliminar
+                        Eliminar
                       </button>
                     </div>
                   </div>
