@@ -391,7 +391,22 @@ const sortByRoom = (a: Contact, b: Contact) => {
               )}
             </div>
 
-            <p className="text-xs text-gray-500">{c.phone}</p>
+            <div className="space-y-1 text-xs text-gray-500">
+
+  <p>{c.phone}</p>
+
+  {c.checkinUrl && (
+    <a
+      href={c.checkinUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-600 hover:underline break-all"
+    >
+      🔗 {c.checkinUrl}
+    </a>
+  )}
+
+</div>
 
             <div className="flex gap-2">
               <button
