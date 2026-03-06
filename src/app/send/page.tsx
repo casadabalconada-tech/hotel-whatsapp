@@ -267,7 +267,7 @@ const statusOrder: Record<Contact["status"], number> = {
       <section className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
         <label className="text-sm font-medium text-gray-700">Mensajes</label>
 
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex flex-wrap gap-2 pb-1">
 
   {categories.map(c => {
 
@@ -281,11 +281,11 @@ const statusOrder: Record<Contact["status"], number> = {
           setSelectedBaseKeys([]);
         }}
         className={`
-          whitespace-nowrap px-4 py-2 rounded-full text-sm transition
-          ${active
-            ? "bg-green-600 text-white"
-            : "bg-gray-100 hover:bg-gray-200"}
-        `}
+  px-4 py-2 rounded-full text-sm transition
+  ${active
+    ? "bg-green-600 text-white"
+    : "bg-gray-100 hover:bg-gray-200"}
+`}
       >
         {c.name}
       </button>
