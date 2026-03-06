@@ -4,8 +4,8 @@ import { CategorySchema } from "./category";
 
 export const MessageSchema = z.object({
   id: z.string(),
+  title: z.string(), 
   baseKey: z.string(),
-  title: z.string(),
   content: z.string(),
   language: LanguageSchema,
   category: CategorySchema, // 🔒 obligatoria

@@ -159,16 +159,25 @@ export default function SendPage() {
         );
 
         if (exact) {
-          blocks.push(exact.content);
+         blocks.push(`*${exact.title}*\n${exact.content}`);
         } else {
           const fallback = messages.find(
             m => m.baseKey === key && m.language === "ES"
           );
           if (fallback) {
-            blocks.push(
-              await translate(fallback.content, contact.language)
-            );
-          }
+
+  const translatedContent = await translate(
+    fallback.content,
+    contact.language
+  );
+
+  const translatedTitle = await translate(
+    fallback.title,
+    contact.language
+  );
+
+  blocks.push(`*${translatedTitle}*\n${translatedContent}`);
+}
         }
       }
 
@@ -258,36 +267,95 @@ const statusOrder: Record<Contact["status"], number> = {
       <section className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
         <label className="text-sm font-medium text-gray-700">Mensajes</label>
 
-        <select
-          className="w-full rounded-xl border px-3 py-3 text-base"
-          value={selectedCategory}
-          onChange={e => {
-            setSelectedCategory(e.target.value);
-            setSelectedBaseKeys([]);
-          }}
-        >
-          <option value="">Selecciona categoría</option>
-          {categories.map(c => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
+        <div className="flex gap-2 overflow-x-auto pb-1">
 
-        {spanishMessages.map(m => (
-          <label key={m.id} className="flex gap-3 text-sm leading-snug">
-            <input
-              type="checkbox"
-              checked={selectedBaseKeys.includes(m.baseKey)}
-              onChange={e =>
-                e.target.checked
-                  ? setSelectedBaseKeys(p => [...p, m.baseKey])
-                  : setSelectedBaseKeys(p => p.filter(k => k !== m.baseKey))
-              }
-            />
-            <span>{m.content}</span>
-          </label>
-        ))}
+  {categories.map(c => {
+
+    const active = selectedCategory === c.id;
+
+    return (
+      <button
+        key={c.id}
+        onClick={() => {
+          setSelectedCategory(c.id);
+          setSelectedBaseKeys([]);
+        }}
+        className={`
+          whitespace-nowrap px-4 py-2 rounded-full text-sm transition
+          ${active
+            ? "bg-green-600 text-white"
+            : "bg-gray-100 hover:bg-gray-200"}
+        `}
+      >
+        {c.name}
+      </button>
+    );
+  })}
+
+</div>
+
+        <div className="space-y-2">
+
+{!selectedCategory && (
+  <p className="text-sm text-gray-400 text-center py-4">
+    Selecciona una categoría
+  </p>
+)}
+
+{selectedCategory && spanishMessages.map(m => {
+
+  const selected = selectedBaseKeys.includes(m.baseKey);
+
+  const toggle = () => {
+    if (selected) {
+      setSelectedBaseKeys(p => p.filter(k => k !== m.baseKey));
+    } else {
+      setSelectedBaseKeys(p => [...p, m.baseKey]);
+    }
+  };
+
+  return (
+    <button
+      key={m.id}
+      onClick={toggle}
+      className={`
+        w-full text-left p-3 rounded-xl border transition
+        ${selected
+          ? "border-green-500 bg-green-50"
+          : "border-gray-200 hover:bg-gray-50"}
+      `}
+    >
+
+      <div className="flex items-start gap-3">
+
+        <div className={`
+          mt-1 w-5 h-5 rounded-md border flex items-center justify-center text-xs
+          ${selected
+            ? "bg-green-500 border-green-500 text-white"
+            : "border-gray-300"}
+        `}>
+          {selected && "✓"}
+        </div>
+
+       <div className="flex-1">
+
+  <p className="text-sm font-semibold text-gray-900">
+    {m.title}
+  </p>
+
+  <p className="text-xs text-gray-500 leading-snug line-clamp-2">
+    {m.content}
+  </p>
+
+</div>
+
+      </div>
+
+    </button>
+  );
+})}
+
+</div>
       </section>
 
       {/* FIRMA */}

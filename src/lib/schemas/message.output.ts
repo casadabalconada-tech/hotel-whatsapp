@@ -12,6 +12,7 @@ const MessageCategorySchema = z.object({
 
 export const MessageOutputSchema = z.object({
   id: z.string(),
+  title: z.string(),
   baseKey: z.string(),
   content: z.string(),
   language: LanguageSchema,
