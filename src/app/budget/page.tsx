@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
+import WhatsAppPreview from "@/components/WhatsAppPreview";
 
 /* =======================
    TYPES
@@ -325,9 +326,11 @@ export default function BudgetPage() {
       </section>
 
       {/* PREVIEW */}
-      <section className="bg-gray-100 rounded-2xl p-4 text-sm whitespace-pre-wrap">
-        {message}
-      </section>
+<section className="space-y-2">
+  <p className="text-sm text-gray-500">Vista previa (WhatsApp)</p>
+
+  <WhatsAppPreview text={message} />
+</section>
 
       {/* ACTION */}
       <a

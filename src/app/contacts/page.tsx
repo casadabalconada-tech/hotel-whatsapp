@@ -113,6 +113,45 @@ export default function ContactsPage() {
   /* =======================
      ACTIONS
   ======================= */
+const recoverFromHistorico = async (c: Contact) => {
+  if (!confirm(`¿Recuperar a ${c.name} como contacto actual?`)) return;
+
+  await fetch("/api/contacts", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: c.id,
+      name: c.name,
+      phone: c.phone,
+      roomNumber: c.roomNumber,
+      language: c.language,
+      checkinUrl: c.checkinUrl,
+      status: "ACTUAL",
+    }),
+  });
+
+  setActiveTab("ACTUAL");
+  loadContacts();
+};
+  const moveToHistorico = async (c: Contact) => {
+  if (!confirm(`¿Pasar a histórico a ${c.name}?`)) return;
+
+  await fetch("/api/contacts", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: c.id,
+      name: c.name,
+      phone: c.phone,
+      roomNumber: c.roomNumber,
+      language: c.language,
+      checkinUrl: c.checkinUrl,
+      status: "HISTORICO",
+    }),
+  });
+
+  loadContacts();
+};
 
   const saveContact = async () => {
     if (!canSave || saving) return;
@@ -174,7 +213,31 @@ export default function ContactsPage() {
      FILTER
   ======================= */
 
-  const filteredContacts = contacts.filter((c) => {
+const sortByRoom = (a: Contact, b: Contact) => {
+  // Los que no tienen habitación van al final
+  if (!a.roomNumber && !b.roomNumber) return 0;
+  if (!a.roomNumber) return 1;
+  if (!b.roomNumber) return -1;
+
+  // Orden numérico si es posible (Hab 2 antes que Hab 10)
+  const numA = parseInt(a.roomNumber, 10);
+  const numB = parseInt(b.roomNumber, 10);
+
+  if (!isNaN(numA) && !isNaN(numB)) {
+    return numA - numB;
+  }
+
+  // Si no son números, ordenar como texto
+  return a.roomNumber.localeCompare(b.roomNumber, "es", {
+    numeric: true,
+    sensitivity: "base",
+  });
+};
+
+
+
+  const filteredContacts = contacts
+  .filter((c) => {
     const q = search.toLowerCase();
     const matches =
       c.name.toLowerCase().includes(q) ||
@@ -183,7 +246,8 @@ export default function ContactsPage() {
 
     if (search.trim()) return matches;
     return c.status === activeTab;
-  });
+  })
+  .sort(sortByRoom);
 
   /* =======================
      UI
@@ -350,7 +414,15 @@ export default function ContactsPage() {
               >
                 Editar
               </button>
-
+                              {c.status !== "HISTORICO" && (
+              <button
+                              type="button"
+                onClick={() => moveToHistorico(c)}
+                className="px-3 py-2 bg-yellow-500 text-white rounded-lg text-xs"
+              >
+                Histórico
+              </button>
+              )}
               <button
                 type="button"
                 onClick={() => deleteContact(c.id)}
@@ -358,6 +430,16 @@ export default function ContactsPage() {
               >
                 Eliminar
               </button>
+{c.status === "HISTORICO" && (
+  <button
+    type="button"
+    onClick={() => recoverFromHistorico(c)}
+    className="px-3 py-2 bg-blue-500 text-white rounded-lg text-xs"
+  >
+    Recuperar
+  </button>
+)}
+
             </div>
           </div>
         ))}

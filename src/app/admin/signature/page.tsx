@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
+import WhatsAppPreview from "@/components/WhatsAppPreview";
 
 export default function AdminSignaturePage() {
   const { setHeader } = useHeader();
@@ -103,17 +104,15 @@ export default function AdminSignaturePage() {
         />
 
         {/* PREVIEW */}
-        {content.trim() && (
-          <div className="bg-gray-100 rounded-xl p-3">
-            <p className="text-xs text-gray-500 mb-1">
-              Vista previa (WhatsApp)
-            </p>
-            <div className="bg-white rounded-xl p-3 shadow text-sm whitespace-pre-wrap">
-              —{"\n"}
-              {content}
-            </div>
-          </div>
-        )}
+{content.trim() && (
+  <section className="space-y-2">
+    <p className="text-xs text-gray-500">
+      Vista previa (WhatsApp)
+    </p>
+
+    <WhatsAppPreview text={`—\n${content}`} />
+  </section>
+)}
 
         <button
           onClick={saveSignature}

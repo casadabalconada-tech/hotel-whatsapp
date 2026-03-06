@@ -45,6 +45,7 @@ model MessageCategory {
 model Message {
   id         String          @id @default(uuid())
   baseKey    String
+  title      String   
   categoryId String
   category   MessageCategory @relation(fields: [categoryId], references: [id])
   language   Language

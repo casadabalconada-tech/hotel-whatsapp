@@ -9,69 +9,69 @@ export default function AppLayout({
 }: {
   children: ReactNode;
 }) {
-  const { title, subtitle, backHref, appTitle } = useHeader();
-
-  const showContextHeader =
-    !!backHref ||
-    (!!title && title !== appTitle) ||
-    !!subtitle;
+  const { title, backHref, appTitle } = useHeader();
+  const pageTitle = title || appTitle;
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 flex flex-col">
-      {/* HEADER */}
-      <header className="sticky top-0 z-30 bg-white border-b safe-top">
-        <div className="mx-auto max-w-screen-md px-4 pt-4 pb-3 space-y-3">
-          
-          {/* BRANDING */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-green-600 flex items-center justify-center text-white text-sm shadow-sm">
-              💬
-            </div>
+    <div className="min-h-screen w-full bg-gray-50 flex">
 
-            <span className="text-sm font-semibold tracking-wide text-gray-900">
-              {appTitle}
-            </span>
-          </div>
+      {/* SIDEBAR DESKTOP */}
+      <aside className="hidden md:flex md:w-20 border-r bg-white">
+        <BottomNav />
+      </aside>
 
-          {/* CONTEXTO DE PANTALLA */}
-          {showContextHeader && (
-            <div className="flex items-start gap-3">
-              {backHref && (
+      {/* CONTENIDO */}
+      <div className="flex flex-col flex-1 min-h-screen">
+
+        {/* HEADER */}
+        <header className="sticky top-0 z-30 bg-white border-b">
+          <div className="mx-auto max-w-screen-md px-4 h-14 flex items-center justify-between">
+
+            {/* IZQUIERDA */}
+            <div className="flex items-center gap-3">
+
+              {backHref ? (
                 <a
                   href={backHref}
-                  aria-label="Volver"
-                  className="flex items-center justify-center w-9 h-9 rounded-xl text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-gray-100 transition"
                 >
                   ←
                 </a>
-              )}
-
-              {(title || subtitle) && (
-                <div className="leading-tight pt-0.5">
-                  {title && title !== appTitle && (
-                    <h1 className="text-lg font-semibold text-gray-900">
-                      {title}
-                    </h1>
-                  )}
-                  {subtitle && (
-                    <p className="text-sm text-gray-500">
-                      {subtitle}
-                    </p>
-                  )}
+              ) : (
+                <div className="w-9 h-9 rounded-xl bg-green-600 flex items-center justify-center text-white shadow-sm">
+                  💬
                 </div>
               )}
+
+              <span className="text-sm font-semibold text-gray-900">
+                {pageTitle}
+              </span>
+
             </div>
-          )}
-        </div>
-      </header>
 
-      {/* CONTENIDO */}
-      <main className="flex-1 w-full mx-auto max-w-screen-md px-4 py-4 pb-24">
-        {children}
-      </main>
+            {/* DERECHA */}
+            <a
+              href="/send"
+              className="text-xs font-medium bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition"
+            >
+              Nuevo mensaje
+            </a>
 
-      {/* NAVEGACIÓN */}
-      <BottomNav />
+          </div>
+        </header>
+
+        {/* MAIN */}
+        <main className="flex-1 w-full mx-auto max-w-screen-md px-4 py-6 pb-24 md:pb-6">
+          {children}
+        </main>
+
+      </div>
+
+      {/* BOTTOM NAV SOLO EN MOBILE */}
+      <div className="md:hidden">
+        <BottomNav />
+      </div>
+
     </div>
   );
 }

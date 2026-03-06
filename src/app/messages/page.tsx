@@ -11,6 +11,7 @@ type Category = {
 type Message = {
   id: string;
   baseKey: string;
+  title: string;
   content: string;
   language: string;
   categoryId: string;
@@ -38,6 +39,7 @@ export default function MessagesPage() {
   const [editingCategoryId, setEditingCategoryId] =
     useState<string | null>(null);
 
+  const [messageTitle, setMessageTitle] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [editingMessageId, setEditingMessageId] =
@@ -139,7 +141,7 @@ export default function MessagesPage() {
      MESSAGE
   ======================= */
   const saveMessage = async () => {
-    if (!messageContent || !selectedCategory) return;
+  if (!messageTitle || !messageContent || !selectedCategory) return;
 
     await fetch("/api/messages", {
       method: editingMessageId ? "PUT" : "POST",
@@ -148,10 +150,12 @@ export default function MessagesPage() {
         editingMessageId
           ? {
               id: editingMessageId,
+              title: messageTitle,
               content: messageContent,
               categoryId: selectedCategory,
             }
           : {
+              title: messageTitle,
               content: messageContent,
               categoryId: selectedCategory,
             }
@@ -160,6 +164,7 @@ export default function MessagesPage() {
 
     setMessageContent("");
     setEditingMessageId(null);
+    setMessageTitle("");
     loadMessages();
   };
 
@@ -177,6 +182,7 @@ export default function MessagesPage() {
 
   const editMessage = (m: Message) => {
     setEditingMessageId(m.id);
+    setMessageTitle(m.title);
     setMessageContent(m.content);
     setSelectedCategory(m.categoryId);
 
@@ -290,6 +296,12 @@ export default function MessagesPage() {
           <h2 className="text-base font-semibold">
             {editingMessageId ? "Editar mensaje" : "Nuevo mensaje (ES)"}
           </h2>
+          <input
+  className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+  placeholder="Título del mensaje (ej: Bienvenida, Check-in, Taxi...)"
+  value={messageTitle}
+  onChange={(e) => setMessageTitle(e.target.value)}
+/>
           <p className="text-xs text-gray-500">
             Plantilla reutilizable de WhatsApp
           </p>
@@ -385,7 +397,10 @@ export default function MessagesPage() {
                     key={m.id}
                     className="bg-gray-50 rounded-xl p-3 space-y-3 hover:bg-gray-100 transition"
                   >
-                    <div className="text-sm whitespace-pre-wrap">
+                  <div className="font-semibold text-sm text-gray-900 flex items-center gap-2">
+                  📌 {m.title}
+                  </div>
+                    <div className="text-sm text-gray-600 line-clamp-3">
                       {m.content}
                     </div>
 

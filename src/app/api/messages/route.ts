@@ -17,11 +17,13 @@ const LanguageSchema = z.nativeEnum(Language);
 
 const MessageCreateSchema = z.object({
   categoryId: z.string().min(1),
+  title: z.string().min(1),
   content: z.string().min(1),
 });
 
 const MessageUpdateSchema = z.object({
   id: z.string().min(1),
+  title: z.string().min(1),
   content: z.string().min(1),
   categoryId: z.string().min(1),
 });
@@ -83,7 +85,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const { categoryId, content } = parsed.data;
+  const { categoryId, title, content } = parsed.data;
 
   const baseKey = crypto.randomUUID();
 
@@ -97,6 +99,7 @@ export async function POST(req: Request) {
   await prisma.message.create({
     data: {
       baseKey,
+      title,
       content,
       language: "ES",
       categoryId,
@@ -104,7 +107,7 @@ export async function POST(req: Request) {
     },
   });
 
-  await generateTranslations(baseKey, content, categoryId, nextOrder);
+  await generateTranslations(baseKey, title, content, categoryId, nextOrder);
 
   return NextResponse.json({ ok: true });
 }
@@ -123,7 +126,7 @@ export async function PUT(req: Request) {
     );
   }
 
-  const { id, content, categoryId } = parsed.data;
+  const { id, title, content, categoryId } = parsed.data;
 
   const message = await prisma.message.findUnique({
     where: { id },
@@ -139,6 +142,7 @@ export async function PUT(req: Request) {
   await prisma.message.update({
     where: { id },
     data: {
+       title,
       content,
       categoryId,
     },
@@ -154,6 +158,7 @@ export async function PUT(req: Request) {
 
   await generateTranslations(
     message.baseKey,
+    title,
     content,
     categoryId,
     message.order
@@ -201,6 +206,7 @@ export async function DELETE(req: Request) {
 // =======================
 async function generateTranslations(
   baseKey: string,
+  title: string,
   content: string,
   categoryId: string,
   order: number
@@ -227,6 +233,7 @@ async function generateTranslations(
     await prisma.message.create({
       data: {
         baseKey,
+        title,
         content: text,
         language: t.lang,
         categoryId,

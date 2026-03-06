@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
+import WhatsAppPreview from "@/components/WhatsAppPreview";
 
 type TaxiCompany = {
   id: string;
@@ -17,18 +18,6 @@ type Contact = {
   roomNumber?: string;
   language?: string;
 };
-
-/* =======================
-   Helpers
-======================= */
-const renderWhatsAppPreview = (text: string) =>
-  text.split("\n").map((line, i) => (
-    <div key={i}>
-      {line.split("*").map((part, j) =>
-        j % 2 === 1 ? <strong key={j}>{part}</strong> : <span key={j}>{part}</span>
-      )}
-    </div>
-  ));
 
 const languageFlag = (lang?: string) => {
   switch (lang) {
@@ -392,16 +381,13 @@ ${contact.phone}
       </section>
 
       {/* PREVIEW */}
-      {message && (
-        <section className="space-y-2">
-          <p className="text-sm text-gray-500">Vista previa (WhatsApp)</p>
-          <div className="bg-[#ece5dd] rounded-2xl p-4">
-            <div className="ml-auto max-w-[85%] bg-[#dcf8c6] p-3 rounded-2xl rounded-br-sm shadow text-sm">
-              {renderWhatsAppPreview(message)}
-            </div>
-          </div>
-        </section>
-      )}
+{message && (
+  <section className="space-y-2">
+    <p className="text-sm text-gray-500">Vista previa (WhatsApp)</p>
+
+    <WhatsAppPreview text={message} />
+  </section>
+)}
 
       {/* ENVIAR WHATSAPP */}
       <button

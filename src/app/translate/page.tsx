@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
+import ContactSelector from "@/components/ContactSelector";
+import WhatsAppPreview from "@/components/WhatsAppPreview";
 
 /* =======================
    TYPES
@@ -16,34 +18,8 @@ type Contact = {
   language: Language;
   roomNumber?: string | null;
   checkinUrl?: string | null;
-  status?: "ACTUAL" | "FUTURO" | "HISTORICO";
+  status: "ACTUAL" | "FUTURO" | "HISTORICO";
 };
-
-/* =======================
-   HELPERS
-======================= */
-
-const languageFlag = (lang: Language) => {
-  switch (lang) {
-    case "ES": return "🇪🇸";
-    case "EN": return "🇬🇧";
-    case "DE": return "🇩🇪";
-    case "FR": return "🇫🇷";
-    case "IT": return "🇮🇹";
-    case "PT": return "🇵🇹";
-    default: return "🏳️";
-  }
-};
-
-// Preview WhatsApp con *negrita*
-const renderWhatsAppPreview = (text: string) =>
-  text.split("\n").map((line, i) => (
-    <div key={i}>
-      {line.split("*").map((part, j) =>
-        j % 2 === 1 ? <b key={j}>{part}</b> : <span key={j}>{part}</span>
-      )}
-    </div>
-  ));
 
 /* =======================
    PAGE
@@ -98,9 +74,7 @@ export default function TranslatePage() {
      STATE DERIVED
   ======================= */
 
-  const activeContacts = contacts.filter(c => c.status === "ACTUAL");
-
-  const selectedContact = activeContacts.find(
+  const selectedContact = contacts.find(
     c => c.id === selectedContactId
   );
 
@@ -161,6 +135,7 @@ export default function TranslatePage() {
         "Puede realizar el Check-in online en el siguiente enlace",
         selectedContact.language
       );
+
       blocks.push(`${txt}\n${selectedContact.checkinUrl}`);
     }
 
@@ -188,6 +163,7 @@ export default function TranslatePage() {
     if (!selectedContact || !translatedText) return;
 
     const phone = selectedContact.phone.replace(/\D/g, "");
+
     window.open(
       `https://wa.me/${phone}?text=${encodeURIComponent(translatedText)}`,
       "_blank"
@@ -202,44 +178,50 @@ export default function TranslatePage() {
     <div className="space-y-6 max-w-xl mx-auto pb-32">
 
       {/* CONTACTO */}
-      <section className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
-        <label className="text-sm font-medium">Contacto</label>
-        <select
-          className="w-full rounded-xl border px-3 py-3 text-base"
-          value={selectedContactId}
-          onChange={e => setSelectedContactId(e.target.value)}
-        >
-          <option value="">Selecciona contacto</option>
-          {activeContacts.map(c => (
-            <option key={c.id} value={c.id}>
-              {languageFlag(c.language)} {c.name}
-            </option>
-          ))}
-        </select>
-      </section>
+      <ContactSelector
+        contacts={contacts}
+        value={selectedContactId}
+        onChange={setSelectedContactId}
+      />
 
       {/* OPCIONES */}
       <section className="bg-white rounded-2xl shadow-sm p-4 space-y-3">
         <p className="text-sm font-medium">Opciones automáticas</p>
 
         <label className="flex gap-3 text-sm">
-          <input type="checkbox" checked={sendGreeting} onChange={e => setSendGreeting(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={sendGreeting}
+            onChange={e => setSendGreeting(e.target.checked)}
+          />
           Saludo personalizado
         </label>
 
         <label className="flex gap-3 text-sm">
-          <input type="checkbox" checked={sendRoom} onChange={e => setSendRoom(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={sendRoom}
+            onChange={e => setSendRoom(e.target.checked)}
+          />
           Número de habitación
         </label>
 
         <label className="flex gap-3 text-sm">
-          <input type="checkbox" checked={sendCheckin} onChange={e => setSendCheckin(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={sendCheckin}
+            onChange={e => setSendCheckin(e.target.checked)}
+          />
           Check-in online
         </label>
 
         {signature && (
           <label className="flex gap-3 text-sm">
-            <input type="checkbox" checked={includeSignature} onChange={e => setIncludeSignature(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={includeSignature}
+              onChange={e => setIncludeSignature(e.target.checked)}
+            />
             Añadir firma
           </label>
         )}
@@ -248,6 +230,7 @@ export default function TranslatePage() {
       {/* MENSAJE */}
       <section className="bg-white rounded-2xl shadow-sm p-4 space-y-2">
         <label className="text-sm font-medium">Mensaje en español</label>
+
         <textarea
           className="w-full h-28 rounded-xl border px-3 py-3 text-base"
           placeholder="Escribe el mensaje…"
@@ -266,16 +249,13 @@ export default function TranslatePage() {
       </button>
 
       {/* PREVIEW */}
-      {translatedText && (
-        <section className="space-y-2">
-          <p className="text-sm text-gray-500">Vista previa</p>
-          <div className="bg-[#ece5dd] rounded-2xl p-4">
-            <div className="ml-auto max-w-[85%] bg-[#dcf8c6] p-3 rounded-2xl rounded-br-sm shadow text-sm">
-              {renderWhatsAppPreview(translatedText)}
-            </div>
-          </div>
-        </section>
-      )}
+{translatedText && (
+  <section className="space-y-2">
+    <p className="text-sm text-gray-500">Vista previa</p>
+
+    <WhatsAppPreview text={translatedText} />
+  </section>
+)}
 
       <button
         type="button"
@@ -285,6 +265,7 @@ export default function TranslatePage() {
       >
         📱 Enviar por WhatsApp
       </button>
+
     </div>
   );
 }

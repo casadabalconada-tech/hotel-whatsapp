@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useHeader } from "@/components/HeaderContext";
+import ContactSelector from "@/components/ContactSelector";
+import WhatsAppPreview from "@/components/WhatsAppPreview";
 
 import {
   ContactsSchema,
@@ -13,34 +15,6 @@ import {
   Language,
 } from "@/lib/schemas";
 
-/* =======================
-   HELPERS
-======================= */
-
-const languageFlag = (lang: Language) => {
-  switch (lang) {
-    case "ES": return "🇪🇸";
-    case "EN": return "🇬🇧";
-    case "DE": return "🇩🇪";
-    case "FR": return "🇫🇷";
-    case "IT": return "🇮🇹";
-    case "PT": return "🇵🇹";
-    default: return "🏳️";
-  }
-};
-
-/* =======================
-   Preview WhatsApp
-======================= */
-
-const renderWhatsAppPreview = (text: string) =>
-  text.split("\n").map((line, i) => (
-    <div key={i}>
-      {line.split("*").map((part, j) =>
-        j % 2 === 1 ? <b key={j}>{part}</b> : <span key={j}>{part}</span>
-      )}
-    </div>
-  ));
 
 /* =======================
    PAGE
@@ -234,29 +208,28 @@ export default function SendPage() {
     );
   };
 
+const statusOrder: Record<Contact["status"], number> = {
+  ACTUAL: 1,
+  FUTURO: 2,
+  HISTORICO: 3,
+};
+
   /* =======================
      UI
   ======================= */
 
-  const activeContacts = contacts.filter(c => c.status === "ACTUAL");
+ 
 
   return (
     <div className="space-y-8 max-w-xl mx-auto pb-40">
       {/* CONTACTO */}
       <section className="bg-white rounded-2xl shadow-sm p-5 space-y-2">
         <label className="text-sm font-medium text-gray-700">Contacto</label>
-        <select
-          className="w-full rounded-xl border px-3 py-3 text-base"
-          value={selectedContact}
-          onChange={e => setSelectedContact(e.target.value)}
-        >
-          <option value="">Selecciona contacto</option>
-          {activeContacts.map(c => (
-            <option key={c.id} value={c.id}>
-              {languageFlag(c.language)} {c.name}
-            </option>
-          ))}
-        </select>
+        <ContactSelector
+  contacts={contacts}
+  value={selectedContact}
+  onChange={setSelectedContact}
+/>
       </section>
 
       {/* OPCIONES */}
@@ -325,19 +298,10 @@ export default function SendPage() {
         </label>
       </section>
 
-      {/* PREVIEW */}
-      {finalText && (
-        <section className="space-y-2">
-          <p className="text-sm text-gray-500">Vista previa</p>
-          <div className="bg-[#ece5dd] rounded-2xl p-4">
-            <div className="ml-auto max-w-[85%] bg-[#dcf8c6] p-3 rounded-2xl rounded-br-sm shadow text-sm">
-              {renderWhatsAppPreview(finalText)}
-            </div>
-          </div>
-        </section>
-      )}
+{/* PREVIEW */}
+<WhatsAppPreview text={finalText} />
 
-      {/* BOTÓN */}
+          {/* BOTÓN */}
       <button
         onClick={openWhatsApp}
         disabled={!finalText}
