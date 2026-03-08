@@ -111,6 +111,14 @@ export default function HomePage() {
             admin
           />
 
+          <DashboardCard
+            href="/translations"
+            emoji="🌐"
+            title="Editar traducciones"
+            subtitle="Correccion de traducciones"
+            admin
+          />
+
         </div>
       </section>
 

@@ -159,7 +159,7 @@ export default function SendPage() {
         );
 
         if (exact) {
-         blocks.push(`*${exact.title}*\n${exact.content}`);
+         blocks.push(exact.content);
         } else {
           const fallback = messages.find(
             m => m.baseKey === key && m.language === "ES"
@@ -176,7 +176,7 @@ export default function SendPage() {
     contact.language
   );
 
-  blocks.push(`*${translatedTitle}*\n${translatedContent}`);
+  blocks.push(translatedContent);
 }
         }
       }
@@ -267,7 +267,7 @@ const statusOrder: Record<Contact["status"], number> = {
       <section className="bg-white rounded-2xl shadow-sm p-5 space-y-4">
         <label className="text-sm font-medium text-gray-700">Mensajes</label>
 
-        <div className="flex flex-wrap gap-2 pb-1">
+        <div className="flex flex-wrap gap-2 pb-1 justify-center">
 
   {categories.map(c => {
 

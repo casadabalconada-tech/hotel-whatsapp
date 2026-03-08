@@ -50,6 +50,7 @@ const statusLabel: Record<ContactStatus, string> = {
   HISTORICO: "Histórico",
 };
 
+
 /* =======================
    PAGE
 ======================= */
@@ -65,8 +66,8 @@ export default function ContactsPage() {
   const [search, setSearch] = useState("");
   const [flash, setFlash] = useState(false);
   const [saving, setSaving] = useState(false);
-
   const [formOpen, setFormOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   /* =======================
      HEADER
@@ -154,11 +155,13 @@ const recoverFromHistorico = async (c: Contact) => {
 };
 
   const saveContact = async () => {
-    if (!canSave || saving) return;
+  if (!canSave || saving) return;
 
-    setSaving(true);
+  setSaving(true);
+  setErrorMessage(null); // limpiar error anterior
 
-    await fetch("/api/contacts", {
+  try {
+    const res = await fetch("/api/contacts", {
       method: editingId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(
@@ -168,13 +171,26 @@ const recoverFromHistorico = async (c: Contact) => {
       ),
     });
 
+    const result = await res.json();
+
+    if (!res.ok) {
+      setErrorMessage(result.error || "Error desconocido");
+      setSaving(false);
+      return;
+    }
+
+    // todo correcto
     setForm(emptyContact);
     setEditingId(null);
     setActiveTab(form.status);
-    setSaving(false);
     setFormOpen(false);
     loadContacts();
-  };
+  } catch (err) {
+    setErrorMessage("Error al guardar contacto");
+  } finally {
+    setSaving(false);
+  }
+};
 
   const deleteContact = async (id: string) => {
     if (!confirm("¿Eliminar este contacto?")) return;
@@ -331,6 +347,14 @@ const sortByRoom = (a: Contact, b: Contact) => {
                 ))}
               </select>
             </div>
+                
+                {errorMessage && (
+                  <p className="text-red-600 text-sm font-medium mb-2">
+                  {errorMessage}
+                  </p>
+                )}
+
+
 
             <button
               type="button"
