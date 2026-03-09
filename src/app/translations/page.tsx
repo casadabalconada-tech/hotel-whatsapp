@@ -143,7 +143,7 @@ export default function TranslationsPage() {
 
     setSaving(true);
 
-    await fetch("/api/messages/bulk-update", {
+    await fetch("/api/translations/bulk-update", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(messages),
@@ -157,7 +157,7 @@ export default function TranslationsPage() {
   ======================= */
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 pb-32">
+    <div className="max-w-4xl mx-auto space-y-6 pb-32 px-3 overflow-x-hidden">
 
       {/* SELECT CATEGORY */}
 
